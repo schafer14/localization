@@ -160,11 +160,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 void ParticleFilter::resample() {
   vector<Particle> new_particles;
 	default_random_engine gen;
-
   vector<double> weights;
+
   for (int i = 0; i < num_particles; i++) {
-    Particle particle = particles[i];
-    weights.push_back(particle.weight);
+    weights.push_back(particles[i].weight);
   }
 
   double beta = 0;
@@ -176,7 +175,7 @@ void ParticleFilter::resample() {
   uniform_real_distribution<double> real_dist(0, max_weight);
 
   for (int i = 0; i < num_particles; i++) {
-    beta = beta + weights[index];
+    beta = beta + real_dist(gen) * 2;
     while (beta > weights[index]) {
       beta = beta - weights[index];
       index = (index + 1) % num_particles;
